@@ -16,6 +16,8 @@ from __future__ import print_function
 import pygame
 pygame.init()
 
+#Import
+startBack = pygame.image.load("img/StartScreenBackground.jpg")
 
 
 #Vars
@@ -26,10 +28,7 @@ menuB = 0
 # init
 screen = pygame.display.set_mode((screenWidth, screenHeight), pygame.FULLSCREEN, 32)
 background = pygame.Surface(screen.get_size())
-background.fill((255, 255, 255))
-background = background.convert()
-screen.blit(background, (0,0))
-screen.blit(background, (50,50))
+screen.blit(startBack,(0,0))
 mainMenu = True
 
 # Pygame clock 
