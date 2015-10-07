@@ -49,6 +49,7 @@ currentCred = creditsBut
 currentSet = settingsBut
 currentStr = startBut
 mainMenu = True
+pygame.mouse.set_visible(True)
 
 # Pygame clock 
 clock = pygame.time.Clock()
@@ -68,8 +69,13 @@ while mainMenu:
     screen.blit(currentCred,(screenWidth/2 -300,screenHeight-400))
     screen.blit(currentSet,(screenWidth/2 -300,screenHeight-600))
     screen.blit(currentStr,(screenWidth/2 -300,screenHeight-800))
-    #while 
+    if creditBut.get_rect().collidepoint(pygame.mouse.get_pos()):
+        currentCred = creditsButOH
+    else:
+        currentCred = creditsBut
     for event in pygame.event.get():
+        if event.type == pygame.MOUSEBUTTONDOWN:
+           print(pygame.mouse.get_pos())
         # User presses QUIT-button.
         if event.type == pygame.QUIT:
             mainloop = False
