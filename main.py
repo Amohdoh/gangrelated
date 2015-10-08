@@ -29,7 +29,8 @@ startBack = pygame.image.load("img/StartScreenBackground.jpg")
 startBack = pygame.transform.scale(startBack, (screenWidth, screenHeight))
 #Main Screen Buttons
 creditsBut = pygame.image.load("img/Credits_Button.png")
-creditsBut = pygame.transform.scale(creditsBut, (600, 400))
+newcreditsBut = pygame.transform.scale(creditsBut, (600, 400))
+creditsRect = newcreditsBut.get_rect()
 creditsButOH = pygame.image.load("img/Credits_Button_On_Hover.png")
 creditsButOH = pygame.transform.scale(creditsButOH, (600, 400))
 settingsBut = pygame.image.load("img/Settings_Button.png")
@@ -40,22 +41,23 @@ startBut = pygame.image.load("img/Start_Button.png")
 startBut = pygame.transform.scale(startBut, (600, 400))
 startButOH = pygame.image.load("img/Start_Button_On_Hover.png")
 startButOH = pygame.transform.scale(startButOH, (600, 400))
-
+coords = pygame.mouse.get_pos()
 # init
-screen = pygame.display.set_mode((screenWidth, screenHeight), pygame.FULLSCREEN, 32)
+screen = pygame.display.set_mode((screenWidth, screenHeight),pygame.FULLSCREEN, 32)
 background = pygame.Surface(screen.get_size())
 screen.blit(startBack,(0,0))
-currentCred = creditsBut
+currentCred = newcreditsBut
 currentSet = settingsBut
 currentStr = startBut
 mainMenu = True
 pygame.mouse.set_visible(True)
 
+
 # Pygame clock 
 clock = pygame.time.Clock()
 
 
-# Desired framerate in frames per second. Try out other values.
+# Desired framerate in frames per second
 FPS = 30
 
 # How many seconds played
@@ -63,16 +65,16 @@ playtime = 0.0
  
  
 while mainMenu:
-    # Do not go faster than this framerate.
+    #Lock Framrate
     milliseconds = clock.tick(FPS)
     playtime += milliseconds / 1000.0
-    screen.blit(currentCred,(screenWidth/2 -300,screenHeight-400))
+    creddy = screen.blit(currentCred,(screenWidth/2 -300,screenHeight-400))
     screen.blit(currentSet,(screenWidth/2 -300,screenHeight-600))
     screen.blit(currentStr,(screenWidth/2 -300,screenHeight-800))
-    if creditBut.get_rect().collidepoint(pygame.mouse.get_pos()):
+    if creddy.collidepoint(pygame.mouse.get_pos()):
         currentCred = creditsButOH
     else:
-        currentCred = creditsBut
+        currentCred = newcreditsBut
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONDOWN:
            print(pygame.mouse.get_pos())
