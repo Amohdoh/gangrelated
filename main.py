@@ -13,7 +13,7 @@ Created by:
 
 
 from __future__ import print_function
-import pygame
+import pygame, sys, socket
 pygame.init()
 
 
@@ -22,7 +22,9 @@ pygame.init()
 infoObject = pygame.display.Info()
 screenWidth, screenHeight = infoObject.current_w, infoObject.current_h
 menuB = 0
-
+Black = (0,0,0)
+mainCheck = True
+mainGame = False
 
 ###____________________________________Import_________________________________________________####
 #Backgrounds
@@ -52,7 +54,15 @@ pygame.mouse.set_visible(True)
 clock = pygame.time.Clock()
 FPS = 30
 playtime = 0.0
- 
+
+
+###____________________________________Functions_______________________________________________####
+def quit_game():
+    pygame.quit()
+
+###____________________________________Game Loop_______________________________________________####
+while mainGame:
+    star = screen.blit(currentStr,(screenWidth/2 -268.5,screenHeight-700))
 
 ###____________________________________Loop__________________________________________________####
 while mainMenu:
@@ -60,11 +70,12 @@ while mainMenu:
     milliseconds = clock.tick(FPS)
     playtime += milliseconds / 1000.0
     #Blit buttons_____________________________________
-    cred = screen.blit(currentCred,(screenWidth/2 -268.5,screenHeight-300))
-    sets = screen.blit(currentSet,(screenWidth/2 -268.5,screenHeight-500))
-    star = screen.blit(currentStr,(screenWidth/2 -268.5,screenHeight-700))
+    if mainCheck == True:
+        cred = screen.blit(currentCred,(screenWidth/2 -268.5,screenHeight-300))
+        sets = screen.blit(currentSet,(screenWidth/2 -268.5,screenHeight-500))
+        star = screen.blit(currentStr,(screenWidth/2 -268.5,screenHeight-700))
     #Title___________________________________________
-    screen.blit(title,(screenWidth/2 -620,screenHeight-1000))
+        screen.blit(title,(screenWidth/2 -620,screenHeight-1000))
     #Hover detection__________________________________
     if cred.collidepoint(pygame.mouse.get_pos()):
         currentCred = creditsButOH
@@ -83,7 +94,17 @@ while mainMenu:
     #Events______________________________________
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONDOWN:
-           print(pygame.mouse.get_pos())
+           if currentCred ==  creditsButOH:
+               mainCheck = False
+               screen.blit(startBack,(0,0))
+           if currentSet == settingsButOH:
+               mainCheck = False
+               screen.blit(startBack, (0,0))
+           if currentStr == startButOH:
+               mainMenu = False
+               mainGame = True
+               screen.blit(startBack, (0,0))
+               
         # User presses QUIT-button.
         if event.type == pygame.QUIT:
             mainloop = False
@@ -105,6 +126,7 @@ while mainMenu:
  
     #Update Pygame display.
     pygame.display.flip()
+
  
 # Finish Pygame.
 pygame.quit()
@@ -113,7 +135,7 @@ pygame.quit()
 
 """
 Settings:
-    FPS
+    FPSS
     USERNAME (SAVE IN FILE)
     RES
     WASD OR ARROW KEYS?
