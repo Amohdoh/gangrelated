@@ -16,38 +16,74 @@ from __future__ import print_function
 import pygame
 pygame.init()
 
-#Import
-startBack = pygame.image.load("img/StartScreenBackground.jpg")
 
 
-#Vars
+###____________________________________Vars___________________________________________________####
 infoObject = pygame.display.Info()
 screenWidth, screenHeight = infoObject.current_w, infoObject.current_h
 menuB = 0
 
-# init
-screen = pygame.display.set_mode((screenWidth, screenHeight), pygame.FULLSCREEN, 32)
+
+###____________________________________Import_________________________________________________####
+#Backgrounds
+startBack = pygame.image.load("img/StartScreenBackground.jpg")
+startBack = pygame.transform.scale(startBack, (screenWidth, screenHeight))
+#Main Screen Buttons
+creditsBut = pygame.image.load("img/Credits_Button.png")
+creditsRect = creditsBut.get_rect()
+creditsButOH = pygame.image.load("img/Credits_Button_On_Hover.png")
+settingsBut = pygame.image.load("img/Settings_Button.png")
+settingsButOH = pygame.image.load("img/Settings_Button_On_Hover.png")
+startBut = pygame.image.load("img/Start_Button.png")
+startButOH = pygame.image.load("img/Start_Button_On_Hover.png")
+title = pygame.image.load("img/Gang_Related_Title.png")
+
+###____________________________________Init___________________________________________________####
+coords = pygame.mouse.get_pos()
+screen = pygame.display.set_mode((screenWidth, screenHeight),pygame.FULLSCREEN, 32)
 background = pygame.Surface(screen.get_size())
 screen.blit(startBack,(0,0))
+currentCred = creditsBut
+currentSet = settingsBut
+currentStr = startBut
 mainMenu = True
-
-# Pygame clock 
+pygame.mouse.set_visible(True)
+#Pygame clock 
 clock = pygame.time.Clock()
- 
-
-# Desired framerate in frames per second. Try out other values.
 FPS = 30
-
-# How many seconds played
 playtime = 0.0
  
- 
+
+###____________________________________Loop__________________________________________________####
 while mainMenu:
-    # Do not go faster than this framerate.
+    #Framrate________________________________________
     milliseconds = clock.tick(FPS)
     playtime += milliseconds / 1000.0
- 
+    #Blit buttons_____________________________________
+    cred = screen.blit(currentCred,(screenWidth/2 -268.5,screenHeight-300))
+    sets = screen.blit(currentSet,(screenWidth/2 -268.5,screenHeight-500))
+    star = screen.blit(currentStr,(screenWidth/2 -268.5,screenHeight-700))
+    #Title___________________________________________
+    screen.blit(title,(screenWidth/2 -620,screenHeight-1000))
+    #Hover detection__________________________________
+    if cred.collidepoint(pygame.mouse.get_pos()):
+        currentCred = creditsButOH
+    else:
+        currentCred = creditsBut
+        
+    if sets.collidepoint(pygame.mouse.get_pos()):
+        currentSet = settingsButOH
+    else:
+        currentSet = settingsBut
+
+    if star.collidepoint(pygame.mouse.get_pos()):
+        currentStr = startButOH
+    else:
+        currentStr = startBut
+    #Events______________________________________
     for event in pygame.event.get():
+        if event.type == pygame.MOUSEBUTTONDOWN:
+           print(pygame.mouse.get_pos())
         # User presses QUIT-button.
         if event.type == pygame.QUIT:
             mainloop = False
