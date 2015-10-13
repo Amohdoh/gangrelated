@@ -18,63 +18,69 @@ pygame.init()
 
 
 
-#Vars
+###____________________________________Vars___________________________________________________####
 infoObject = pygame.display.Info()
 screenWidth, screenHeight = infoObject.current_w, infoObject.current_h
 menuB = 0
-#mpos = pygame.mouse.get_pos()
-###Import####
+
+
+###____________________________________Import_________________________________________________####
 #Backgrounds
 startBack = pygame.image.load("img/StartScreenBackground.jpg")
 startBack = pygame.transform.scale(startBack, (screenWidth, screenHeight))
 #Main Screen Buttons
 creditsBut = pygame.image.load("img/Credits_Button.png")
-newcreditsBut = pygame.transform.scale(creditsBut, (600, 400))
-creditsRect = newcreditsBut.get_rect()
+creditsRect = creditsBut.get_rect()
 creditsButOH = pygame.image.load("img/Credits_Button_On_Hover.png")
-creditsButOH = pygame.transform.scale(creditsButOH, (600, 400))
 settingsBut = pygame.image.load("img/Settings_Button.png")
-settingsBut = pygame.transform.scale(settingsBut, (600, 400))
 settingsButOH = pygame.image.load("img/Settings_Button_On_Hover.png")
-settingsButOH = pygame.transform.scale(settingsButOH, (600, 400))
 startBut = pygame.image.load("img/Start_Button.png")
-startBut = pygame.transform.scale(startBut, (600, 400))
 startButOH = pygame.image.load("img/Start_Button_On_Hover.png")
-startButOH = pygame.transform.scale(startButOH, (600, 400))
+title = pygame.image.load("img/Gang_Related_Title.png")
+
+###____________________________________Init___________________________________________________####
 coords = pygame.mouse.get_pos()
-# init
 screen = pygame.display.set_mode((screenWidth, screenHeight),pygame.FULLSCREEN, 32)
 background = pygame.Surface(screen.get_size())
 screen.blit(startBack,(0,0))
-currentCred = newcreditsBut
+currentCred = creditsBut
 currentSet = settingsBut
 currentStr = startBut
 mainMenu = True
 pygame.mouse.set_visible(True)
-
-
-# Pygame clock 
+#Pygame clock 
 clock = pygame.time.Clock()
-
-
-# Desired framerate in frames per second
 FPS = 30
-
-# How many seconds played
 playtime = 0.0
  
- 
+
+###____________________________________Loop__________________________________________________####
 while mainMenu:
-    #Lock Framrate
+    #Framrate________________________________________
     milliseconds = clock.tick(FPS)
     playtime += milliseconds / 1000.0
-    creddy = screen.blit(currentCred,(screenWidth/2 -300,screenHeight-400))
-    screen.blit(currentSet,(screenWidth/2 -300,screenHeight-600))
-    screen.blit(currentStr,(screenWidth/2 -300,screenHeight-800))
-    if creddy.collidepoint(pygame.mouse.get_pos()):
+    #Blit buttons_____________________________________
+    cred = screen.blit(currentCred,(screenWidth/2 -268.5,screenHeight-300))
+    sets = screen.blit(currentSet,(screenWidth/2 -268.5,screenHeight-500))
+    star = screen.blit(currentStr,(screenWidth/2 -268.5,screenHeight-700))
+    #Title___________________________________________
+    screen.blit(title,(screenWidth/2 -620,screenHeight-1000))
+    #Hover detection__________________________________
+    if cred.collidepoint(pygame.mouse.get_pos()):
         currentCred = creditsButOH
     else:
-        currentCred = newcreditsBut
+        currentCred = creditsBut
+        
+    if sets.collidepoint(pygame.mouse.get_pos()):
+        currentSet = settingsButOH
+    else:
+        currentSet = settingsBut
+
+    if star.collidepoint(pygame.mouse.get_pos()):
+        currentStr = startButOH
+    else:
+        currentStr = startBut
+    #Events______________________________________
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONDOWN:
            print(pygame.mouse.get_pos())
