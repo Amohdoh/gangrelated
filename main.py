@@ -23,11 +23,8 @@ infoObject = pygame.display.Info()
 screenWidth, screenHeight = infoObject.current_w, infoObject.current_h
 menuB = 0
 Black = (0,0,0)
-global mainCheck
 mainCheck = True
-buttonMainCheck = True
-buttonPlayCheck = False
-
+mainGame = False
 
 ###____________________________________Import_________________________________________________####
 #Backgrounds
@@ -42,9 +39,6 @@ settingsButOH = pygame.image.load("img/Settings_Button_On_Hover.png")
 startBut = pygame.image.load("img/Start_Button.png")
 startButOH = pygame.image.load("img/Start_Button_On_Hover.png")
 title = pygame.image.load("img/Gang_Related_Title.png")
-backBut = pygame.image.load("img/Back_Button.png")
-backButOH = pygame.image.load("img/Back_Button_On_Hover.png")
-
 
 ###____________________________________Init___________________________________________________####
 coords = pygame.mouse.get_pos()
@@ -54,7 +48,6 @@ screen.blit(startBack,(0,0))
 currentCred = creditsBut
 currentSet = settingsBut
 currentStr = startBut
-currentBackB = backBut
 mainMenu = True
 pygame.mouse.set_visible(True)
 #Pygame clock 
@@ -63,98 +56,66 @@ FPS = 30
 playtime = 0.0
 
 
-
 ###____________________________________Functions_______________________________________________####
-def quitGame():
+def quit_game():
     pygame.quit()
-    
-def backButton():
-    print("back")
-    
-def mainGame():
-     screen.blit(startBack, (0,0))
-     global backB
-     backB = screen.blit(backBut,(screenWidth/2 -268.5,screenHeight-300))
 
+###____________________________________Game Loop_______________________________________________####
+while mainGame:
+    star = screen.blit(currentStr,(screenWidth/2 -268.5,screenHeight-700))
 
 ###____________________________________Loop__________________________________________________####
 while mainMenu:
-    ###____________________________________Game Loop_______________________________________________####
-
-        
     #Framrate________________________________________
     milliseconds = clock.tick(FPS)
     playtime += milliseconds / 1000.0
-    
     #Blit buttons_____________________________________
     if mainCheck == True:
         cred = screen.blit(currentCred,(screenWidth/2 -268.5,screenHeight-300))
         sets = screen.blit(currentSet,(screenWidth/2 -268.5,screenHeight-500))
         star = screen.blit(currentStr,(screenWidth/2 -268.5,screenHeight-700))
-        
     #Title___________________________________________
         screen.blit(title,(screenWidth/2 -620,screenHeight-1000))
-        
     #Hover detection__________________________________
-    if buttonMainCheck == True:
-        if cred.collidepoint(pygame.mouse.get_pos()):
-            currentCred = creditsButOH
-        else:
-            currentCred = creditsBut
-            
-        if sets.collidepoint(pygame.mouse.get_pos()):
-            currentSet = settingsButOH
-        else:
-            currentSet = settingsBut
-
-        if star.collidepoint(pygame.mouse.get_pos()):
-            currentStr = startButOH
-        else:
-            currentStr = startBut
-            
-    if buttonPlayCheck == True:
-        if backB.collidepoint(pygame.mouse.get_pos()):
-            currentBackB = backButOH
-        else:
-            currentBackB = backBut
+    if cred.collidepoint(pygame.mouse.get_pos()):
+        currentCred = creditsButOH
+    else:
+        currentCred = creditsBut
         
+    if sets.collidepoint(pygame.mouse.get_pos()):
+        currentSet = settingsButOH
+    else:
+        currentSet = settingsBut
+
+    if star.collidepoint(pygame.mouse.get_pos()):
+        currentStr = startButOH
+    else:
+        currentStr = startBut
     #Events______________________________________
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONDOWN:
-            
            if currentCred ==  creditsButOH:
                mainCheck = False
                screen.blit(startBack,(0,0))
-               
            if currentSet == settingsButOH:
                mainCheck = False
                screen.blit(startBack, (0,0))
-               
            if currentStr == startButOH:
-               buttonMainCheck = False
-               mainCheck = False
-               buttonPlayCheck = True
-               mainGame()
-
-           if currentBackB == backButOH:
-               backButton()
+               mainMenu = False
+               mainGame = True
+               screen.blit(startBack, (0,0))
                
-               
-               
-        #Quit__________________________________
+        # User presses QUIT-button.
         if event.type == pygame.QUIT:
             mainloop = False
-            
         elif event.type == pygame.KEYDOWN:
-            
+            # User presses ESCAPE-Key
             if event.key == pygame.K_ESCAPE:
                 mainloop = False
-                
             if event.key == pygame.K_UP:
                 if menuB > 0: 
                     menuB = menuB - 1
                     print(menuB)
-                    
             if event.key == pygame.K_DOWN:
                  if menuB < 3: 
                     menuB = menuB + 1
@@ -174,9 +135,10 @@ pygame.quit()
 
 """
 Settings:
-    FPS
+    FPSS
     USERNAME (SAVE IN FILE)
     RES
+    WASD OR ARROW KEYS?
     TURN MUSIC ON OR OFF
     TURN SOUND FX ON OR OFF
 """
