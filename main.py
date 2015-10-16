@@ -44,6 +44,11 @@ startButOH = pygame.image.load("img/Start_Button_On_Hover.png")
 title = pygame.image.load("img/Gang_Related_Title.png")
 backBut = pygame.image.load("img/Back_Button.png")
 backButOH = pygame.image.load("img/Back_Button_On_Hover.png")
+quitBut = pygame.image.load("img/Quit_Button.png")
+quitBut = pygame.transform.scale(quitBut, (269,92))
+quitButOH = pygame.image.load("img/Quit_Button_On_Hover.png")
+quitButOH = pygame.transform.scale(quitButOH, (269,92))
+
 
 
 ###____________________________________Init___________________________________________________####
@@ -55,6 +60,7 @@ currentCred = creditsBut
 currentSet = settingsBut
 currentStr = startBut
 currentBackB = backBut
+currentQ = quitBut
 mainMenu = True
 pygame.mouse.set_visible(True)
 #Pygame clock 
@@ -68,32 +74,33 @@ playtime = 0.0
 def quitGame():
     pygame.quit()
     
-def backButton():
-    print("back")
-    
-def mainGame():
-     screen.blit(startBack, (0,0))
-     global backB
-     backB = screen.blit(backBut,(screenWidth/2 -268.5,screenHeight-300))
+
 
 
 ###____________________________________Loop__________________________________________________####
 while mainMenu:
     ###____________________________________Game Loop_______________________________________________####
+    if buttonPlayCheck == True:
+        screen.blit(startBack, (0,0))
+        backB = screen.blit(currentBackB,(screenWidth/2 -268.5,screenHeight-300))
 
         
     #Framrate________________________________________
     milliseconds = clock.tick(FPS)
     playtime += milliseconds / 1000.0
     
-    #Blit buttons_____________________________________
+
     if mainCheck == True:
-        cred = screen.blit(currentCred,(screenWidth/2 -268.5,screenHeight-300))
-        sets = screen.blit(currentSet,(screenWidth/2 -268.5,screenHeight-500))
-        star = screen.blit(currentStr,(screenWidth/2 -268.5,screenHeight-700))
         
     #Title___________________________________________
         screen.blit(title,(screenWidth/2 -620,screenHeight-1000))
+    #Blit buttons_____________________________________
+        cred = screen.blit(currentCred,(screenWidth/2 -268.5,screenHeight-300))
+        sets = screen.blit(currentSet,(screenWidth/2 -268.5,screenHeight-500))
+        star = screen.blit(currentStr,(screenWidth/2 -268.5,screenHeight-700))
+        quitb = screen.blit(currentQ,(screenWidth-280,screenHeight-150))
+        
+
         
     #Hover detection__________________________________
     if buttonMainCheck == True:
@@ -112,11 +119,17 @@ while mainMenu:
         else:
             currentStr = startBut
             
+        if quitb.collidepoint(pygame.mouse.get_pos()):
+            currentQ = quitButOH
+        else:
+            currentQ = quitBut
+            
     if buttonPlayCheck == True:
         if backB.collidepoint(pygame.mouse.get_pos()):
             currentBackB = backButOH
         else:
-            currentBackB = backBut
+            currentBackB = backBut    
+
         
     #Events______________________________________
     for event in pygame.event.get():
@@ -131,16 +144,19 @@ while mainMenu:
                screen.blit(startBack, (0,0))
                
            if currentStr == startButOH:
-               buttonMainCheck = False
                mainCheck = False
+               buttonMainCheck = False
                buttonPlayCheck = True
-               mainGame()
+               currentStr = startBut
 
            if currentBackB == backButOH:
-               backButton()
-               
-               
-               
+               mainCheck = True
+               buttonMainCheck = True
+               buttonPlayCheck = False
+               currentBackB = backBut
+
+           if currentQ == quitButOH:
+               quitGame()
         #Quit__________________________________
         if event.type == pygame.QUIT:
             mainloop = False
