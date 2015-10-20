@@ -11,7 +11,6 @@ Created by:
 
 """
 
-#Version Number Fix
 from __future__ import print_function
 import pygame, sys, socket
 pygame.init()
@@ -48,9 +47,14 @@ quitBut = pygame.image.load("img/Quit_Button.png")
 quitBut = pygame.transform.scale(quitBut, (269,92))
 quitButOH = pygame.image.load("img/Quit_Button_On_Hover.png")
 quitButOH = pygame.transform.scale(quitButOH, (269,92))
-
-
-
+multiplayerBut = pygame.image.load("img/Multiplayer_Button.png")
+multiplayerButOH = pygame.image.load("img/Multiplayer_Button_On_Hover.png")
+singleplayerBut = pygame.image.load("img/Singleplayer_Button.png")
+singleplayerButOH = pygame.image.load("img/Singleplayer_Button_On_Hover.png")
+#Music
+menuMusic = "snd/Menu.ogg"
+gameMusic = "snd/In_Game.mp3"
+gameoverMusic = "snd/Credits.mp3"
 ###____________________________________Init___________________________________________________####
 coords = pygame.mouse.get_pos()
 screen = pygame.display.set_mode((screenWidth, screenHeight),pygame.FULLSCREEN, 32)
@@ -61,13 +65,20 @@ currentSet = settingsBut
 currentStr = startBut
 currentBackB = backBut
 currentQ = quitBut
+currentMulti = multiplayerBut
+currentSingle = singleplayerBut
 mainMenu = True
 pygame.mouse.set_visible(True)
 #Pygame clock 
 clock = pygame.time.Clock()
 FPS = 30
 playtime = 0.0
+singleplayerCheck = False
 
+
+pygame.mixer.init()
+menuSound = pygame.mixer.Sound(menuMusic)
+menuSound.play(loops = -1)
 
 
 ###____________________________________Functions_______________________________________________####
@@ -83,7 +94,8 @@ while mainMenu:
     if buttonPlayCheck == True:
         screen.blit(startBack, (0,0))
         backB = screen.blit(currentBackB,(screenWidth/2 -268.5,screenHeight-300))
-
+        multiB = screen.blit(currentMulti, (screenWidth/2 -268.5, screenHeight-500))
+        singleB = screen.blit(currentSingle, (screenWidth/2 -268.5, screenHeight-700))
         
     #Framrate________________________________________
     milliseconds = clock.tick(FPS)
@@ -101,7 +113,8 @@ while mainMenu:
         quitb = screen.blit(currentQ,(screenWidth-280,screenHeight-150))
         
 
-        
+    if singleplayerCheck:
+        print("worked")
     #Hover detection__________________________________
     if buttonMainCheck == True:
         if cred.collidepoint(pygame.mouse.get_pos()):
@@ -128,7 +141,17 @@ while mainMenu:
         if backB.collidepoint(pygame.mouse.get_pos()):
             currentBackB = backButOH
         else:
-            currentBackB = backBut    
+            currentBackB = backBut
+
+        if multiB.collidepoint(pygame.mouse.get_pos()):
+            currentMulti = multiplayerButOH
+        else:
+            currentMulti = multiplayerBut
+
+        if singleB.collidepoint(pygame.mouse.get_pos()):
+            currentSingle = singleplayerButOH
+        else:
+            currentSingle = singleplayerBut
 
         
     #Events______________________________________
@@ -147,16 +170,25 @@ while mainMenu:
                mainCheck = False
                buttonMainCheck = False
                buttonPlayCheck = True
+               singleplayerCheck = False
                currentStr = startBut
 
            if currentBackB == backButOH:
                mainCheck = True
                buttonMainCheck = True
                buttonPlayCheck = False
+               singleplayerCheck = False
                currentBackB = backBut
 
            if currentQ == quitButOH:
                quitGame()
+
+           if currentSingle == singleplayerButOH:
+               mainCheck = False
+               buttonMainCheck = False
+               buttonPlayCheck = False
+               singleplayerCheck = True
+               currentSingle = singleplayerButOH
         #Quit__________________________________
         if event.type == pygame.QUIT:
             mainloop = False
@@ -196,4 +228,3 @@ Settings:
     TURN MUSIC ON OR OFF
     TURN SOUND FX ON OR OFF
 """
- 
