@@ -52,6 +52,7 @@ multiplayerButOH = pygame.image.load("img/Multiplayer_Button_On_Hover.png")
 singleplayerBut = pygame.image.load("img/Singleplayer_Button.png")
 singleplayerButOH = pygame.image.load("img/Singleplayer_Button_On_Hover.png")
 level1Floor = pygame.image.load("img/Floorplan_Basement.png")
+level1Floor = pygame.transform.scale(level1Floor, (screenWidth,screenHeight))
 #Music
 menuMusic = "snd/Menu.ogg"
 gameMusic = "snd/In_Game.mp3"
@@ -75,6 +76,7 @@ clock = pygame.time.Clock()
 FPS = 30
 playtime = 0.0
 singleplayerCheck = False
+creditsCheck = False
 
 
 pygame.mixer.init()
@@ -161,16 +163,22 @@ while mainMenu:
             
            if currentCred ==  creditsButOH:
                mainCheck = False
-               screen.blit(startBack,(0,0))
+               buttonMainCheck = False
+               buttonPlayCheck = False
+               singleplayerCheck = False
+               creditsCheck = True
+               screen.blit(creditsScreen,(0,0))
                
            if currentSet == settingsButOH:
                mainCheck = False
+               creditsCheck = False
                screen.blit(startBack, (0,0))
                
            if currentStr == startButOH:
                mainCheck = False
                buttonMainCheck = False
                buttonPlayCheck = True
+               creditsCheck = False
                singleplayerCheck = False
                currentStr = startBut
 
@@ -179,6 +187,7 @@ while mainMenu:
                buttonMainCheck = True
                buttonPlayCheck = False
                singleplayerCheck = False
+               creditsCheck = False
                currentBackB = backBut
 
            if currentQ == quitButOH:
@@ -188,6 +197,7 @@ while mainMenu:
                mainCheck = False
                buttonMainCheck = False
                buttonPlayCheck = False
+               creditsCheck = False
                singleplayerCheck = True
                currentSingle = singleplayerButOH
         #Quit__________________________________
