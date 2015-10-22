@@ -14,7 +14,7 @@ Created by:
 from __future__ import print_function
 import pygame, sys, socket
 pygame.init()
-
+from pygame import *
 
 
 ###____________________________________Vars___________________________________________________####
@@ -53,6 +53,12 @@ singleplayerBut = pygame.image.load("img/Singleplayer_Button.png")
 singleplayerButOH = pygame.image.load("img/Singleplayer_Button_On_Hover.png")
 level1Floor = pygame.image.load("img/Floorplan_Basement.png")
 level1Floor = pygame.transform.scale(level1Floor, (screenWidth,screenHeight))
+creditsScreen = pygame.image.load("img/Credits_Screen.png")
+creditsScreen = pygame.transform.scale(creditsScreen, (screenWidth,screenHeight))
+redPlay = pygame.image.load("img/char/other/Color_Choose_Red_Original.png")
+redPlayOH = pygame.image.load("img/char/other/Color_Choose_OnHover_Red_Original.png")
+bluePlay = pygame.image.load("img/char/other/Color_Choose_Blue_Original.png")
+bluePlayOH = pygame.image.load("img/char/other/Color_Choose_OnHover_Blue_Original.png")
 #Music
 menuMusic = "snd/Menu.ogg"
 gameMusic = "snd/In_Game.mp3"
@@ -77,13 +83,16 @@ FPS = 30
 playtime = 0.0
 singleplayerCheck = False
 creditsCheck = False
-
+(playerX, playerY) = (200,200)
+currentRedPlay = redPlay
+currentBluePlay = bluePlay
+singleplayerPlayerSelect = False
 
 pygame.mixer.init()
 menuSound = pygame.mixer.Sound(menuMusic)
 menuSound.play(loops = -1)
 
-
+print(screenWidth, screenHeight)
 ###____________________________________Functions_______________________________________________####
 def quitGame():
     pygame.quit()
@@ -93,6 +102,11 @@ def quitGame():
 
 ###____________________________________Loop__________________________________________________####
 while mainMenu:
+    ###__________________________________Player Select____________________________________________####
+    if singleplayerPlayerSelect:
+        screen.blit(startBack,(0,0))
+        redPlayBlit =  screen.blit(currentRedPlay,(screenWidth/2+300,screenHeight-300))
+        bluePlayBlit =  screen.blit(currentBluePlay,(screenWidth/2 -300,screenHeight-300))
     ###____________________________________Game Loop_______________________________________________####
     if buttonPlayCheck == True:
         screen.blit(startBack, (0,0))
@@ -117,7 +131,51 @@ while mainMenu:
         
 
     if singleplayerCheck:
+        #Put level ground_____________________________
         screen.blit(level1Floor,(0,0))
+        #Get and set vars_____________________________
+        
+        (mouseX, mouseY) = pygame.mouse.get_pos()
+        #Import images__________________________________
+        playerLeft = pygame.image.load("img/char/PlayerModel_Left_Glock_Original.png")
+        playerLeft = pygame.transform.scale(playerLeft, (88,96))
+        playerRight = pygame.image.load("img/char/PlayerModel_Right_Glock_Original.png")
+        playerRight = pygame.transform.scale(playerRight, (88,96))
+        currentPlayer = playerLeft
+        
+        if mouseX > playerX + 88:
+            currentPlayer = playerRight
+            
+        keys=pygame.key.get_pressed()
+        if keys[K_w]:    
+            playerY = playerY - 10
+            
+        if keys[K_a]:
+            playerX = playerX - 10
+            
+        if keys[K_s]:    
+            playerY = playerY + 10
+            
+        if keys[K_d]:    
+            playerX = playerX + 10
+
+        if keys[K_p]:
+            print(playerX, playerY)
+
+        if playerX >= screenWidth-230:
+            playerX = screenWidth-230
+        if playerX <= 150:
+            playerX = 150
+        if playerY <= 60:
+            playerY = 60
+        if playerY>=screenHeight-270:
+            playerY = screenHeight-270
+        playerSprite = screen.blit(currentPlayer,(playerX,playerY))
+        pygame.display.update()
+        
+    if creditsCheck:
+        screen.blit(creditsScreen,(0,0))
+        backB = screen.blit(currentBackB,(screenWidth/2 -268.5,screenHeight-300))
     #Hover detection__________________________________
     if buttonMainCheck == True:
         if cred.collidepoint(pygame.mouse.get_pos()):
@@ -155,6 +213,22 @@ while mainMenu:
             currentSingle = singleplayerButOH
         else:
             currentSingle = singleplayerBut
+            
+    if singleplayerPlayerSelect:
+        if bluePlayBlit.collidepoint(pygame.mouse.get_pos()):
+            currentBluePlay = bluePlay
+        else:
+            currentBluePlay = bluePlayOH
+            
+        if redPlayBlit.collidepoint(pygame.mouse.get_pos()):
+            currentRedPlay = redPlay
+        else:
+            currentRedPlay = redPlayOH
+    if creditsCheck == True:
+        if backB.collidepoint(pygame.mouse.get_pos()):
+            currentBackB = backButOH
+        else:
+            currentBackB = backBut
 
         
     #Events______________________________________
@@ -167,7 +241,8 @@ while mainMenu:
                buttonPlayCheck = False
                singleplayerCheck = False
                creditsCheck = True
-               screen.blit(creditsScreen,(0,0))
+               currentCred = creditsBut
+               
                
            if currentSet == settingsButOH:
                mainCheck = False
@@ -189,6 +264,7 @@ while mainMenu:
                singleplayerCheck = False
                creditsCheck = False
                currentBackB = backBut
+               screen.blit(startBack, (0,0))
 
            if currentQ == quitButOH:
                quitGame()
@@ -198,7 +274,8 @@ while mainMenu:
                buttonMainCheck = False
                buttonPlayCheck = False
                creditsCheck = False
-               singleplayerCheck = True
+               singleplayerCheck = False
+               singleplayerPlayerSelect = True
                currentSingle = singleplayerButOH
         #Quit__________________________________
         if event.type == pygame.QUIT:
@@ -239,3 +316,18 @@ Settings:
     TURN MUSIC ON OR OFF
     TURN SOUND FX ON OR OFF
 """
+
+##SPRITE IN CASE NEEDED LATER###
+        #class playerSprite(pygame.sprite.Sprite):
+            #image = None
+            #def __init__(self,location):
+                #if playerSprite.image is None:
+                    #playerSprite.image = pygame.image.load("img/char/PlayerModel_Left_Glock_Original.png")
+                    #playerSprite.image = pygame.transform.scale(playerSprite.image, (88,96))
+                #self.image = playerSprite.image
+
+                #self.rect = self.image.get_rect()
+                #self.rect.topleft = location
+
+        #playerSin1 = playerSprite([10,10])
+        #screen.blit(playerSin1.image, playerSin1.rect)
