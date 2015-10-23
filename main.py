@@ -56,9 +56,13 @@ level1Floor = pygame.transform.scale(level1Floor, (screenWidth,screenHeight))
 creditsScreen = pygame.image.load("img/Credits_Screen.png")
 creditsScreen = pygame.transform.scale(creditsScreen, (screenWidth,screenHeight))
 redPlay = pygame.image.load("img/char/other/Color_Choose_Red_Original.png")
+redPlay = pygame.transform.scale(redPlay, (500,500))
 redPlayOH = pygame.image.load("img/char/other/Color_Choose_OnHover_Red_Original.png")
+redPlayOH = pygame.transform.scale(redPlayOH, (500,500))
 bluePlay = pygame.image.load("img/char/other/Color_Choose_Blue_Original.png")
+bluePlay = pygame.transform.scale(bluePlay, (500,500))
 bluePlayOH = pygame.image.load("img/char/other/Color_Choose_OnHover_Blue_Original.png")
+bluePlayOH = pygame.transform.scale(bluePlayOH, (500,500))
 #Music
 menuMusic = "snd/Menu.ogg"
 gameMusic = "snd/In_Game.mp3"
@@ -79,7 +83,7 @@ mainMenu = True
 pygame.mouse.set_visible(True)
 #Pygame clock 
 clock = pygame.time.Clock()
-FPS = 30
+FPS = 30 
 playtime = 0.0
 singleplayerCheck = False
 creditsCheck = False
@@ -87,7 +91,7 @@ creditsCheck = False
 currentRedPlay = redPlay
 currentBluePlay = bluePlay
 singleplayerPlayerSelect = False
-
+charColorSin = "null"
 pygame.mixer.init()
 menuSound = pygame.mixer.Sound(menuMusic)
 menuSound.play(loops = -1)
@@ -105,8 +109,8 @@ while mainMenu:
     ###__________________________________Player Select____________________________________________####
     if singleplayerPlayerSelect:
         screen.blit(startBack,(0,0))
-        redPlayBlit =  screen.blit(currentRedPlay,(screenWidth/2+300,screenHeight-300))
-        bluePlayBlit =  screen.blit(currentBluePlay,(screenWidth/2 -300,screenHeight-300))
+        redPlayBlit =  screen.blit(currentRedPlay,(screenWidth/2 -700,screenHeight-700))
+        bluePlayBlit =  screen.blit(currentBluePlay,(screenWidth/2 +200,screenHeight-700))
     ###____________________________________Game Loop_______________________________________________####
     if buttonPlayCheck == True:
         screen.blit(startBack, (0,0))
@@ -137,27 +141,36 @@ while mainMenu:
         
         (mouseX, mouseY) = pygame.mouse.get_pos()
         #Import images__________________________________
-        playerLeft = pygame.image.load("img/char/PlayerModel_Left_Glock_Original.png")
-        playerLeft = pygame.transform.scale(playerLeft, (88,96))
-        playerRight = pygame.image.load("img/char/PlayerModel_Right_Glock_Original.png")
-        playerRight = pygame.transform.scale(playerRight, (88,96))
-        currentPlayer = playerLeft
+        if charColorSin == "red":
+            PlayerLeft = pygame.image.load("img/char/PlayerModel_Left_Glock_Original.png")
+            PlayerLeft = pygame.transform.scale(PlayerLeft, (88,96))
+            PlayerRight = pygame.image.load("img/char/PlayerModel_Right_Glock_Original.png")
+            PlayerRight = pygame.transform.scale(PlayerRight, (88,96))
+            currentPlayer = PlayerLeft
+        elif charColorSin == "blue":
+            PlayerLeft = pygame.image.load("img/char/2_PlayerModel_Left_Glock_Original.png")
+            PlayerLeft = pygame.transform.scale(PlayerLeft, (88,96))
+            PlayerRight = pygame.image.load("img/char/2_PlayerModel_Right_Glock_Original.png")
+            PlayerRight = pygame.transform.scale(PlayerRight, (88,96))
+            currentPlayer = PlayerLeft
+            
+        
         
         if mouseX > playerX + 88:
-            currentPlayer = playerRight
+            currentPlayer = PlayerRight
             
         keys=pygame.key.get_pressed()
         if keys[K_w]:    
-            playerY = playerY - 10
+            playerY = playerY - 15
             
         if keys[K_a]:
-            playerX = playerX - 10
+            playerX = playerX - 15
             
         if keys[K_s]:    
-            playerY = playerY + 10
+            playerY = playerY + 15
             
         if keys[K_d]:    
-            playerX = playerX + 10
+            playerX = playerX + 15
 
         if keys[K_p]:
             print(playerX, playerY)
@@ -216,14 +229,14 @@ while mainMenu:
             
     if singleplayerPlayerSelect:
         if bluePlayBlit.collidepoint(pygame.mouse.get_pos()):
-            currentBluePlay = bluePlay
-        else:
             currentBluePlay = bluePlayOH
+        else:
+            currentBluePlay = bluePlay
             
         if redPlayBlit.collidepoint(pygame.mouse.get_pos()):
-            currentRedPlay = redPlay
-        else:
             currentRedPlay = redPlayOH
+        else:
+            currentRedPlay = redPlay
     if creditsCheck == True:
         if backB.collidepoint(pygame.mouse.get_pos()):
             currentBackB = backButOH
@@ -276,7 +289,26 @@ while mainMenu:
                creditsCheck = False
                singleplayerCheck = False
                singleplayerPlayerSelect = True
-               currentSingle = singleplayerButOH
+               currentSingle = singleplayerBut
+               
+           if currentBluePlay == bluePlayOH:
+               charColorSin = "blue"
+               mainCheck = False
+               buttonMainCheck = False
+               buttonPlayCheck = False
+               creditsCheck = False
+               singleplayerCheck = True
+               singleplayerPlayerSelect = False
+               currentBluePlay = bluePlay
+           if currentRedPlay == redPlayOH:
+               charColorSin = "red"
+               mainCheck = False
+               buttonMainCheck = False
+               buttonPlayCheck = False
+               creditsCheck = False
+               singleplayerCheck = True
+               singleplayerPlayerSelect = False
+               currentBluePlay = bluePlay
         #Quit__________________________________
         if event.type == pygame.QUIT:
             mainloop = False
