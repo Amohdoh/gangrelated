@@ -65,7 +65,7 @@ bluePlayOH = pygame.image.load("img/char/other/Color_Choose_OnHover_Blue_Origina
 bluePlayOH = pygame.transform.scale(bluePlayOH, (500,500))
 #Music
 menuMusic = "snd/Menu.ogg"
-gameMusic = "snd/In_Game.mp3"
+gameMusic = "snd/In_Game.ogg"
 gameoverMusic = "snd/Credits.mp3"
 ###____________________________________Init___________________________________________________####
 coords = pygame.mouse.get_pos()
@@ -95,6 +95,7 @@ singleplayerPlayerSelect = False
 charColorSin = "null"
 pygame.mixer.init()
 allPressed = False
+firstRun = True
 menuSound = pygame.mixer.Sound(menuMusic)
 menuSound.play(loops = -1)
 defaultFont = pygame.font.Font("etc/fntf.otf", 75)
@@ -103,6 +104,9 @@ wClicked = False
 aClicked = False
 sClicked = False
 dClicked = False
+mouseClicked = False
+pauseMenu = False
+
 ###____________________________________Functions_______________________________________________####
 def quitGame():
     pygame.quit()
@@ -145,9 +149,12 @@ while mainMenu:
 
         
     if singleplayerCheck:
+        if firstRun:
+            menuSound.fadeout(1500)
+            gameSound = pygame.mixer.Sound(gameMusic)
+            gameSound.play(loops = -1)
+            firstRun = False
 
-
-        pauseMenu = False
         #Put level ground_____________________________
         screen.blit(level1Floor,(0,0))
         
@@ -270,7 +277,8 @@ while mainMenu:
     #Events______________________________________
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONDOWN:
-            
+           if singleplayerCheck == True: 
+               mouseClicked = True
            if currentCred ==  creditsButOH:
                mainCheck = False
                buttonMainCheck = False
@@ -344,6 +352,7 @@ while mainMenu:
                     pauseMenu = True
                 if pauseMenu:
                     singleplayerCheck = True
+                    pauseMenu = False
                 
             if event.key == pygame.K_UP:
                 if menuB > 0: 
