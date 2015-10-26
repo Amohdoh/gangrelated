@@ -80,6 +80,7 @@ currentQ = quitBut
 currentMulti = multiplayerBut
 currentSingle = singleplayerBut
 mainMenu = True
+pauseMenu = False
 pygame.mouse.set_visible(True)
 #Pygame clock 
 clock = pygame.time.Clock()
@@ -93,10 +94,15 @@ currentBluePlay = bluePlay
 singleplayerPlayerSelect = False
 charColorSin = "null"
 pygame.mixer.init()
+allPressed = False
 menuSound = pygame.mixer.Sound(menuMusic)
 menuSound.play(loops = -1)
-
+defaultFont = pygame.font.Font("etc/fntf.otf", 75)
 print(screenWidth, screenHeight)
+wClicked = False
+aClicked = False
+sClicked = False
+dClicked = False
 ###____________________________________Functions_______________________________________________####
 def quitGame():
     pygame.quit()
@@ -106,6 +112,7 @@ def quitGame():
 
 ###____________________________________Loop__________________________________________________####
 while mainMenu:
+
     ###__________________________________Player Select____________________________________________####
     if singleplayerPlayerSelect:
         screen.blit(startBack,(0,0))
@@ -133,10 +140,18 @@ while mainMenu:
         star = screen.blit(currentStr,(screenWidth/2 -268.5,screenHeight-700))
         quitb = screen.blit(currentQ,(screenWidth-280,screenHeight-150))
         
+    if pauseMenu:
+        singleplayerCheck = False
 
+        
     if singleplayerCheck:
+
+
+        pauseMenu = False
         #Put level ground_____________________________
         screen.blit(level1Floor,(0,0))
+        
+
         #Get and set vars_____________________________
         
         (mouseX, mouseY) = pygame.mouse.get_pos()
@@ -162,16 +177,16 @@ while mainMenu:
         keys=pygame.key.get_pressed()
         if keys[K_w]:    
             playerY = playerY - 15
-            
+            wClicked = True
         if keys[K_a]:
             playerX = playerX - 15
-            
+            aClicked = True
         if keys[K_s]:    
             playerY = playerY + 15
-            
+            sClicked = True
         if keys[K_d]:    
             playerX = playerX + 15
-
+            dClicked = True
         if keys[K_p]:
             print(playerX, playerY)
 
@@ -184,6 +199,14 @@ while mainMenu:
         if playerY>=screenHeight-270:
             playerY = screenHeight-270
         playerSprite = screen.blit(currentPlayer,(playerX,playerY))
+        if wClicked == True and aClicked == True and sClicked == True and dClicked == True:
+            allPressed = True
+        if allPressed == False:
+            instructionB1 = defaultFont.render("Use 'WASD' to move", 1, (255,255,255))
+            screen.blit(instructionB1, (screenWidth/2-350,screenHeight/2-250))
+        if allPressed == True and mouseClicked == False:
+            instructionB2 = defaultFont.render("Left click to shoot", 1, (255,255,255))
+            screen.blit(instructionB2, (screenWidth/2-350,screenHeight/2-250))
         pygame.display.update()
         
     if creditsCheck:
@@ -300,6 +323,7 @@ while mainMenu:
                singleplayerCheck = True
                singleplayerPlayerSelect = False
                currentBluePlay = bluePlay
+               
            if currentRedPlay == redPlayOH:
                charColorSin = "red"
                mainCheck = False
@@ -316,7 +340,10 @@ while mainMenu:
         elif event.type == pygame.KEYDOWN:
             
             if event.key == pygame.K_ESCAPE:
-                mainloop = False
+                if singleplayerCheck:
+                    pauseMenu = True
+                if pauseMenu:
+                    singleplayerCheck = True
                 
             if event.key == pygame.K_UP:
                 if menuB > 0: 
