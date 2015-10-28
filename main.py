@@ -95,6 +95,7 @@ charColorSin = "null"
 pygame.mixer.init()
 allPressed = False
 firstRun = True
+firstRunStart = True
 menuSound = pygame.mixer.Sound(menuMusic)
 menuSound.play(loops = -1)
 defaultFont = pygame.font.Font("etc/fntf.otf", 75)
@@ -105,7 +106,7 @@ sClicked = False
 dClicked = False
 mouseClicked = False
 pauseMenu = False
-notShooting = True
+isShooting = False
 direction = ""
 ###____________________________________Functions_______________________________________________####
 def quitGame():
@@ -163,7 +164,7 @@ while mainMenu:
         
         (mouseX, mouseY) = pygame.mouse.get_pos()
         #Import images__________________________________
-        if charColorSin == "red":
+        if charColorSin == "red" and firstRunStart:
             PlayerLeft = pygame.image.load("img/char/PlayerModel_Left_Glock_Original.png")
             PlayerLeft = pygame.transform.scale(PlayerLeft, (88,96))
             PlayerLeftShooting = pygame.image.load("img/char/PlayerModel_Left_Glock_Firing.png")
@@ -173,7 +174,8 @@ while mainMenu:
             PlayerRightShooting = pygame.image.load("img/char/PlayerModel_Right_Glock_Firing.png")
             PlayerRightShooting = pygame.transform.scale(PlayerRightShooting, (88,96))
             currentPlayer = PlayerLeft
-        elif charColorSin == "blue":
+            firstRunStart = False
+        elif charColorSin == "blue" and firstRunStart:
             PlayerLeft = pygame.image.load("img/char/2_PlayerModel_Left_Glock_Original.png")
             PlayerLeft = pygame.transform.scale(PlayerLeft, (88,96))
             PlayerLeftShooting = pygame.image.load("img/char/2_PlayerModel_Left_Glock_Firing.png")
@@ -183,13 +185,13 @@ while mainMenu:
             PlayerRightShooting = pygame.image.load("img/char/2_PlayerModel_Right_Glock_Firing.png")
             PlayerRightShooting = pygame.transform.scale(PlayerRightShooting, (88,96))
             currentPlayer = PlayerLeft
-            
+            firstRunStart = False
         
         
-        if mouseX > playerX + 88:
+        if mouseX > playerX + 88 and isShooting == False:
             currentPlayer = PlayerRight
             direction = "Right"
-        else:
+        if mouseX < playerX and isShooting == False:
             currentPlayer = PlayerLeft
             direction = "Left"
             
@@ -218,8 +220,7 @@ while mainMenu:
         if playerY>=screenHeight-270:
             playerY = screenHeight-270
             
-        if notShooting:
-            playerSprite = screen.blit(currentPlayer,(playerX,playerY))
+        playerSprite = screen.blit(currentPlayer,(playerX,playerY))
 
             
         if wClicked == True and aClicked == True and sClicked == True and dClicked == True:
@@ -359,25 +360,24 @@ while mainMenu:
                currentBluePlay = bluePlay
 
            if singleplayerCheck:
+               checkTimeNow = True
+               if checkTimeNow:
+                    now = pygame.time.get_ticks()
+                    checkTimeNow = False
+                    print (now)
+               change = now + 200
+               print (change)
                if direction == "Left":
-                   checkTimeNow = True
-                   if checkTimeNow:
-                       now = pygame.time.get_ticks()
-                       change = now + 1500
-                       checkTimeNow = False
-                       print(now)
-                       print(change)
-                       print(now)
-                   print(now)
-                   if now <= change:
-                       notShooting = False
-                       currentPlayer = PlayerLeftShooting
-                       print("bang left")
-                   notShooting = True
-               elif direction == "Right":
-                   print("bang right")
-                   currentPlayer = PlayerRightShooting
-                   currentPlayer = PlayerRight
+                    isShooting = True
+                    currentPlayer = PlayerLeftShooting
+                    if now >= change:
+                        isShooting = False
+                        print("bang left")
+               if direction == "Right":
+                    currentPlayer = PlayerRightShooting
+                    if now >= change:
+                        isShooting = False
+##                        currentPlayer = PlayerRight
         #Quit__________________________________
         if event.type == pygame.QUIT:
             mainloop = False
