@@ -109,6 +109,7 @@ pauseMenu = False
 isShooting = False
 checkTheTime = False
 onFirst = False
+level2Start = False
 now = 0
 change = 0
 direction = ""
@@ -249,8 +250,15 @@ while mainMenu:
         if allPressed == True and mouseClicked == True and onFirst:
             instructionB3 = defaultFont.render("Enter empty door to Continue", 1, (255,255,255))
             screen.blit(instructionB3, (screenWidth/2-550,screenHeight/2-250))
+        if allPressed == True and mouseClicked == True and onFirst and playerX == screenWidth-230 and playerY == screenHeight - 550:
+            level2Start = True
+      
         pygame.display.flip()
-        
+
+    if level2Start:
+        singleplayerCheck = False
+        screen.blit(creditsScreen,(0,0))
+        pygame.display.flip()
     if creditsCheck:
         screen.blit(creditsScreen,(0,0))
         backB = screen.blit(currentBackB,(screenWidth/2 -268.5,screenHeight-300))
@@ -417,6 +425,8 @@ while mainMenu:
                  if menuB < 3: 
                     menuB = menuB + 1
                     print(menuB)
+            if event.key == pygame.K_l:
+                 print(playerX, playerY)
  
     #Playtime: {1:.2f}".format(clock.get_fps(), playtime)
     
