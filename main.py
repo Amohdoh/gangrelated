@@ -62,6 +62,8 @@ bluePlay = pygame.image.load("img/char/other/Color_Choose_Blue_Original.png")
 bluePlay = pygame.transform.scale(bluePlay, (500,500))
 bluePlayOH = pygame.image.load("img/char/other/Color_Choose_OnHover_Blue_Original.png")
 bluePlayOH = pygame.transform.scale(bluePlayOH, (500,500))
+level2Surface = pygame.image.load("img/Floorplan_level2.png")
+level2Surface = pygame.transform.scale(level2Surface, (screenWidth, screenHeight))
 #Music
 menuMusic = "snd/Menu.ogg"
 gameMusic = "snd/In_Game.ogg"
@@ -254,11 +256,60 @@ while mainMenu:
             level2Start = True
       
         pygame.display.flip()
-
+#Level 2______________________________________________
     if level2Start:
         singleplayerCheck = False
-        screen.blit(creditsScreen,(0,0))
+        level1Floor = "dsadsa"
+
+
+        #Put level ground_____________________________
+        currentLevelBack = level2Surface
+        screen.blit(currentLevelBack,(0,0))        
+
+        #Get and set vars_____________________________
+        
+        (mouseX, mouseY) = pygame.mouse.get_pos()
+        
+        
+        if mouseX > playerX + 88 and isShooting == False:
+            currentPlayer = PlayerRight
+            direction = "Right"
+        if mouseX < playerX and isShooting == False:
+            currentPlayer = PlayerLeft
+            direction = "Left"
+            
+        keys=pygame.key.get_pressed()
+        if keys[K_w]:    
+            playerY = playerY - 15
+            wClicked = True
+        if keys[K_a]:
+            playerX = playerX - 15
+            aClicked = True
+        if keys[K_s]:    
+            playerY = playerY + 15
+            sClicked = True
+        if keys[K_d]:    
+            playerX = playerX + 15
+            dClicked = True
+        if keys[K_p]:
+            print(playerX, playerY)
+
+        if playerX >= screenWidth-230:
+            playerX = screenWidth-230
+        if playerX <= 150:
+            playerX = 150
+        if playerY <= 60:
+            playerY = 60
+        if playerY>=screenHeight-270:
+            playerY = screenHeight-270
+            
+
+        screen.blit(currentLevelBack,(0,0))       
+        playerSprite = screen.blit(currentPlayer,(playerX,playerY))
+        
+        
         pygame.display.flip()
+#Credits______________________________________________
     if creditsCheck:
         screen.blit(creditsScreen,(0,0))
         backB = screen.blit(currentBackB,(screenWidth/2 -268.5,screenHeight-300))
@@ -416,17 +467,15 @@ while mainMenu:
                     singleplayerCheck = True
                     pauseMenu = False
                 
-            if event.key == pygame.K_UP:
+            elif event.key == pygame.K_UP:
                 if menuB > 0: 
                     menuB = menuB - 1
                     print(menuB)
                     
-            if event.key == pygame.K_DOWN:
+            elif event.key == pygame.K_DOWN:
                  if menuB < 3: 
                     menuB = menuB + 1
                     print(menuB)
-            if event.key == pygame.K_l:
-                 print(playerX, playerY)
  
     #Playtime: {1:.2f}".format(clock.get_fps(), playtime)
     
