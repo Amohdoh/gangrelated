@@ -50,7 +50,7 @@ multiplayerBut = pygame.image.load("img/Multiplayer_Button.png")
 multiplayerButOH = pygame.image.load("img/Multiplayer_Button_On_Hover.png")
 singleplayerBut = pygame.image.load("img/Singleplayer_Button.png")
 singleplayerButOH = pygame.image.load("img/Singleplayer_Button_On_Hover.png")
-level1Floor = pygame.image.load("img/Floorplan_Basement.png")
+level1Floor = pygame.image.load("img/Floorplan_Basement_Door_Open.png")
 level1Floor = pygame.transform.scale(level1Floor, (screenWidth,screenHeight))
 creditsScreen = pygame.image.load("img/Credits_Screen.png")
 creditsScreen = pygame.transform.scale(creditsScreen, (screenWidth,screenHeight))
@@ -83,7 +83,7 @@ pauseMenu = False
 pygame.mouse.set_visible(True)
 #Pygame clock 
 clock = pygame.time.Clock()
-FPS = 45 
+FPS = 28 
 playtime = 0.0
 singleplayerCheck = False
 creditsCheck = False
@@ -107,6 +107,10 @@ dClicked = False
 mouseClicked = False
 pauseMenu = False
 isShooting = False
+checkTheTime = False
+onFirst = False
+now = 0
+change = 0
 direction = ""
 ###____________________________________Functions_______________________________________________####
 def quitGame():
@@ -117,7 +121,16 @@ def quitGame():
 
 ###____________________________________Loop__________________________________________________####
 while mainMenu:
-
+    if checkTheTime:
+        if pygame.time.get_ticks() >= change:
+           if direction == "Left":
+                currentPlayer = PlayerLeft
+                isShooting = False
+                checkTheTime = False
+           elif direction == "Right":
+                currentPlayer = PlayerRight
+                isShooting = False
+                checkTheTime = False
     ###__________________________________Player Select____________________________________________####
     if singleplayerPlayerSelect:
         screen.blit(startBack,(0,0))
@@ -220,6 +233,8 @@ while mainMenu:
         if playerY>=screenHeight-270:
             playerY = screenHeight-270
             
+
+            
         playerSprite = screen.blit(currentPlayer,(playerX,playerY))
 
             
@@ -231,6 +246,9 @@ while mainMenu:
         if allPressed == True and mouseClicked == False:
             instructionB2 = defaultFont.render("Left click to shoot", 1, (255,255,255))
             screen.blit(instructionB2, (screenWidth/2-350,screenHeight/2-250))
+        if allPressed == True and mouseClicked == True and onFirst:
+            instructionB3 = defaultFont.render("Enter empty door to Continue", 1, (255,255,255))
+            screen.blit(instructionB3, (screenWidth/2-550,screenHeight/2-250))
         pygame.display.flip()
         
     if creditsCheck:
@@ -258,7 +276,7 @@ while mainMenu:
         else:
             currentQ = quitBut
             
-    if buttonPlayCheck == True:
+    elif buttonPlayCheck == True:
         if backB.collidepoint(pygame.mouse.get_pos()):
             currentBackB = backButOH
         else:
@@ -274,7 +292,7 @@ while mainMenu:
         else:
             currentSingle = singleplayerBut
             
-    if singleplayerPlayerSelect:
+    elif singleplayerPlayerSelect:
         if bluePlayBlit.collidepoint(pygame.mouse.get_pos()):
             currentBluePlay = bluePlayOH
         else:
@@ -284,7 +302,7 @@ while mainMenu:
             currentRedPlay = redPlayOH
         else:
             currentRedPlay = redPlay
-    if creditsCheck == True:
+    elif creditsCheck == True:
         if backB.collidepoint(pygame.mouse.get_pos()):
             currentBackB = backButOH
         else:
@@ -296,6 +314,7 @@ while mainMenu:
         if event.type == pygame.MOUSEBUTTONDOWN:
            if singleplayerCheck == True: 
                mouseClicked = True
+               onFirst = True
            if currentCred ==  creditsButOH:
                mainCheck = False
                buttonMainCheck = False
@@ -363,22 +382,20 @@ while mainMenu:
                checkTimeNow = True
                if checkTimeNow:
                     now = pygame.time.get_ticks()
+                    change = now + 200
                     checkTimeNow = False
-                    print (now)
-               change = now + 200
-               print (change)
                if direction == "Left":
                     isShooting = True
                     currentPlayer = PlayerLeftShooting
-                    if now >= change:
-                        isShooting = False
-                        print("bang left")
-               if direction == "Right":
+                    checkTheTime = True
+               elif direction == "Right":
+                    isShooting = True
                     currentPlayer = PlayerRightShooting
-                    if now >= change:
-                        isShooting = False
+                    checkTheTime = True
+                    
 ##                        currentPlayer = PlayerRight
-        #Quit__________________________________
+
+        #Quit___________________________
         if event.type == pygame.QUIT:
             mainloop = False
             
